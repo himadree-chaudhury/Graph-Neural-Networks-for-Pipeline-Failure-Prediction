@@ -1,0 +1,2 @@
+# Graph-Neural-Networks-for-Pipeline-Failure-Prediction
+Pipelines transport vital resources but are vulnerable to failures from corrosion, stress, and ground movement, causing economic and safety risks. Traditional methods struggle with complex dependencies. This thesis proposes a Graph Neural Network framework modeling pipelines as graphs to integrate diverse data for accurate failure prediction.
