@@ -1,223 +1,339 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Proposal: GNN for Pipeline Failure Prediction</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>GNN Predictive Analytics - Futuristic Pipeline Intelligence</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: "Calm Harmony" - A professional palette using warm neutrals (slate grays, off-white) with a strong, trustworthy blue (#2563eb) as the primary accent for data and interactive elements. -->
-    <!-- Application Structure Plan: The application follows a narrative structure designed for user understanding, not mirroring the report's layout. The flow is: 1. The High-Stakes Problem (Hook with impactful stats). 2. The Core Limitation (Visually explaining the "Tabular Trap"). 3. The GNN Solution (Introducing GNNs with a simple interactive diagram). 4. The Proof (A mini-dashboard with performance charts and ROI). 5. The Framework (An interactive flowchart of the implementation process). 6. The Path Forward (Clear, actionable recommendations). This thematic flow guides the user from 'Why this is a problem' to 'How we solve it' and 'What to do next', which is more intuitive for a web experience than a formal report structure. -->
-    <!-- Visualization & Content Choices: 1. Failure Costs (Inform) -> Large HTML stats for immediate impact. 2. Failure Causes (Compare) -> Chart.js Horizontal Bar Chart for clear comparison of factors. 3. "Tabular Trap" (Compare/Explain) -> Custom HTML/CSS diagram to visually contrast the two approaches, which is more effective than a generic chart for this core concept. 4. GNN Performance (Compare) -> Chart.js Bar Chart to show quantifiable superiority over benchmarks. 5. ROI (Inform) -> Chart.js Donut Charts for a quick visual of key business benefits. 6. Implementation Steps (Organize) -> Interactive HTML/CSS flowchart to guide users through the process. All choices prioritize clarity and engagement within the designed narrative flow. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            /* slate-50 */
-            color: #1e293b;
-            /* slate-800 */
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700;800&display=swap');
+
+        * {
+            font-family: 'Poppins', sans-serif;
         }
 
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 350px;
-            max-height: 400px;
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 400px;
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .5;
             }
         }
 
-        .nav-link {
-            transition: color 0.2s;
+        .bg-grid {
+            background-image: linear-gradient(45deg, transparent 48%, rgba(0, 255, 255, 0.1) 49%, rgba(0, 255, 255, 0.1) 51%, transparent 52%);
+            background-size: 20px 20px;
         }
 
-        .nav-link:hover {
-            color: #2563eb;
-            /* blue-600 */
+        .glow {
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
         }
 
-        .step-content {
+        .text-glow {
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+        }
+
+        .accordion-content {
             max-height: 0;
+            opacity: 0;
             overflow: hidden;
-            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            transition: all 0.5s ease-in-out;
+        }
+
+        .accordion-content.active {
+            max-height: 400px;
+            opacity: 1;
+        }
+
+        .node {
+            transition: all 0.3s ease;
+        }
+
+        .node:hover {
+            transform: scale(1.1);
+        }
+
+        .edge {
+            transition: all 0.3s ease;
+        }
+
+        .edge.active {
+            background: #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
     </style>
 </head>
 
-<body class="antialiased">
+<body class="min-h-screen bg-black text-white overflow-x-hidden">
+    <!-- Animated Background -->
+    <div class="fixed inset-0 z-0">
+        <div class="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-cyan-900/20"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,255,0.1),transparent_50%)]"></div>
+        <div class="absolute inset-0 bg-grid animate-pulse"></div>
+    </div>
 
-    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+    <!-- Navigation -->
+    <nav class="relative z-50 bg-black/80 backdrop-blur-xl border-b border-cyan-500/30 sticky top-0">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex-shrink-0">
-                    <span class="text-lg font-bold text-slate-900">GNN Predictive Analytics</span>
+                    <span
+                        class="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                        GNN PREDICTIVE ANALYTICS
+                    </span>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#problem" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">The
-                            Problem</a>
-                        <a href="#solution" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">The
-                            GNN Solution</a>
-                        <a href="#proof" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">The
-                            Proof</a>
+                        <a href="#the-problem"
+                            class="px-3 py-2 rounded-md text-sm font-medium text-cyan-300 hover:text-white hover:bg-cyan-500/20 transition-all duration-300 border border-transparent hover:border-cyan-500/50">THE
+                            PROBLEM</a>
+                        <a href="#gnn-solution"
+                            class="px-3 py-2 rounded-md text-sm font-medium text-cyan-300 hover:text-white hover:bg-cyan-500/20 transition-all duration-300 border border-transparent hover:border-cyan-500/50">GNN
+                            SOLUTION</a>
+                        <a href="#the-proof"
+                            class="px-3 py-2 rounded-md text-sm font-medium text-cyan-300 hover:text-white hover:bg-cyan-500/20 transition-all duration-300 border border-transparent hover:border-cyan-500/50">THE
+                            PROOF</a>
                         <a href="#framework"
-                            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">The Framework</a>
+                            class="px-3 py-2 rounded-md text-sm font-medium text-cyan-300 hover:text-white hover:bg-cyan-500/20 transition-all duration-300 border border-transparent hover:border-cyan-500/50">FRAMEWORK</a>
                         <a href="#next-steps"
-                            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Next Steps</a>
+                            class="px-3 py-2 rounded-md text-sm font-medium text-cyan-300 hover:text-white hover:bg-cyan-500/20 transition-all duration-300 border border-transparent hover:border-cyan-500/50">NEXT
+                            STEPS</a>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main>
-        <section id="hero" class="bg-slate-100 py-20 text-center">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">Revolutionizing Pipeline
-                    Integrity</h1>
-                <p class="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-slate-600">From Reactive Repairs to Proactive
-                    Prediction with Graph Neural Networks</p>
+    <main class="relative z-10">
+        <!-- Hero Section -->
+        <section id="hero" class="py-20 text-center relative">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/10 to-transparent"></div>
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+                <h1
+                    class="text-5xl md:text-7xl font-black bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent tracking-tight mb-6 animate-pulse">
+                    REVOLUTIONIZING PIPELINE INTEGRITY
+                </h1>
+                <p class="mt-4 max-w-3xl mx-auto text-xl md:text-2xl text-cyan-300 font-light">
+                    From Reactive Repairs to Proactive Prediction with Graph Neural Networks
+                </p>
+                <div class="mt-8 flex justify-center">
+                    <div class="w-32 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full animate-pulse"></div>
+                </div>
             </div>
         </section>
 
-        <section id="problem" class="py-16 md:py-24">
+        <!-- Problem Section -->
+        <section id="the-problem" class="py-16 md:py-24 relative">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold tracking-tight text-slate-900">The High Cost of Failure</h2>
-                    <p class="mt-3 max-w-2xl mx-auto text-lg text-slate-600">Between 2010-2017 in the US alone, pipeline
-                        incidents resulted in catastrophic losses, highlighting the inadequacy of current maintenance
-                        strategies.</p>
+                    <h2
+                        class="text-4xl font-bold bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent mb-4">
+                        THE HIGH COST OF FAILURE
+                    </h2>
+                    <p class="mt-3 max-w-2xl mx-auto text-lg text-gray-300">
+                        Between 2010-2017 in the US alone, pipeline incidents resulted in catastrophic losses,
+                        highlighting the
+                        inadequacy of current maintenance strategies.
+                    </p>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                    <div class="bg-white p-8 rounded-xl shadow-lg">
-                        <p class="text-5xl font-black text-blue-600">$1.1B</p>
-                        <p class="mt-2 text-lg font-semibold text-slate-800">In Financial Damages</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center mb-20">
+                    <div
+                        class="bg-black/60 backdrop-blur-xl p-8 rounded-2xl border border-cyan-500/30 hover:border-cyan-400/60 transition-all duration-300 group relative">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        </div>
+                        <p
+                            class="text-6xl font-black bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent relative z-10">
+                            $1.1B</p>
+                        <p class="mt-2 text-lg font-semibold text-gray-300 relative z-10">In Financial Damages</p>
                     </div>
-                    <div class="bg-white p-8 rounded-xl shadow-lg">
-                        <p class="text-5xl font-black text-blue-600">100+</p>
-                        <p class="mt-2 text-lg font-semibold text-slate-800">Fatalities</p>
+                    <div
+                        class="bg-black/60 backdrop-blur-xl p-8 rounded-2xl border border-cyan-500/30 hover:border-cyan-400/60 transition-all duration-300 group relative">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        </div>
+                        <p
+                            class="text-6xl font-black bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent relative z-10">
+                            100+</p>
+                        <p class="mt-2 text-lg font-semibold text-gray-300 relative z-10">Fatalities</p>
                     </div>
-                    <div class="bg-white p-8 rounded-xl shadow-lg">
-                        <p class="text-5xl font-black text-blue-600">17.5B ft³</p>
-                        <p class="mt-2 text-lg font-semibold text-slate-800">Methane Gas Lost</p>
+                    <div
+                        class="bg-black/60 backdrop-blur-xl p-8 rounded-2xl border border-cyan-500/30 hover:border-cyan-400/60 transition-all duration-300 group relative">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        </div>
+                        <p
+                            class="text-6xl font-black bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent relative z-10">
+                            17.5B ft³</p>
+                        <p class="mt-2 text-lg font-semibold text-gray-300 relative z-10">Methane Gas Lost</p>
                     </div>
                 </div>
 
+                <!-- Tabular Trap Comparison -->
                 <div class="mt-20">
                     <div class="text-center mb-12">
-                        <h3 class="text-2xl font-bold tracking-tight text-slate-900">The "Tabular Trap": Why Traditional
-                            Models Fall Short</h3>
-                        <p class="mt-3 max-w-3xl mx-auto text-lg text-slate-600">Traditional AI sees data in isolated
-                            rows, missing the critical network context. They see the dots, but fail to see the lines
-                            connecting them.</p>
+                        <h3
+                            class="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-red-400 bg-clip-text text-transparent mb-4">
+                            THE "TABULAR TRAP": WHY TRADITIONAL MODELS FAIL
+                        </h3>
+                        <p class="mt-3 max-w-3xl mx-auto text-lg text-gray-300">
+                            Traditional AI sees data in isolated rows, missing the critical network context. They see
+                            the dots,
+                            but fail to see the lines connecting them.
+                        </p>
                     </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                        <div class="border-2 border-dashed border-red-400 p-6 rounded-lg text-center bg-red-50">
-                            <h4 class="text-xl font-bold text-red-700 mb-4">Traditional View: Isolated Features</h4>
-                            <p class="text-slate-600 mb-6">Models analyze features individually, unable to understand
-                                how a problem in one segment might influence another.</p>
-                            <div class="flex justify-around items-center h-32 p-4 bg-white rounded-md shadow-inner">
-                                <div
-                                    class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow">
-                                    Pipe A</div>
-                                <div
-                                    class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow">
-                                    Pipe B</div>
-                                <div
-                                    class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow">
-                                    Pipe C</div>
-                            </div>
-                            <p class="mt-4 text-sm text-red-600 font-semibold">Result: Missed network effects & hidden
-                                risks.</p>
-                        </div>
-                        <div class="border-2 border-solid border-blue-500 p-6 rounded-lg text-center bg-blue-50">
-                            <h4 class="text-xl font-bold text-blue-700 mb-4">GNN View: Connected Network</h4>
-                            <p class="text-slate-600 mb-6">GNNs are built to understand relationships, modeling the
-                                entire network to see how issues propagate and interact.</p>
+                        <!-- Traditional View -->
+                        <div
+                            class="border-2 border-red-500/50 p-6 rounded-2xl bg-red-900/20 backdrop-blur-xl relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-red-500/10 to-transparent"></div>
+                            <h4 class="text-xl font-bold text-red-400 mb-4 relative z-10">
+                                TRADITIONAL VIEW: ISOLATED FEATURES
+                            </h4>
+                            <p class="text-gray-300 mb-6 relative z-10">
+                                Models analyze features individually, unable to understand how a problem in one segment
+                                might
+                                influence another.
+                            </p>
                             <div
-                                class="relative flex justify-around items-center h-32 p-4 bg-white rounded-md shadow-inner">
-                                <div class="absolute top-1/2 left-8 right-8 h-1 bg-blue-300 z-0"></div>
+                                class="flex justify-around items-center h-32 p-4 bg-black/40 rounded-xl border border-red-500/30 relative z-10">
                                 <div
-                                    class="relative w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow z-10">
-                                    Pipe A</div>
+                                    class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-red-500/50">
+                                    A</div>
                                 <div
-                                    class="relative w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow z-10">
-                                    Pipe B</div>
+                                    class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-red-500/50">
+                                    B</div>
                                 <div
-                                    class="relative w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow z-10">
-                                    Pipe C</div>
+                                    class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-red-500/50">
+                                    C</div>
                             </div>
-                            <p class="mt-4 text-sm text-blue-600 font-semibold">Result: Holistic understanding &
-                                accurate predictions.</p>
+                            <p class="mt-4 text-sm text-red-400 font-semibold relative z-10">
+                                RESULT: Missed network effects & hidden risks
+                            </p>
+                        </div>
+
+                        <!-- GNN View -->
+                        <div
+                            class="border-2 border-cyan-500/50 p-6 rounded-2xl bg-cyan-900/20 backdrop-blur-xl relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent"></div>
+                            <h4 class="text-xl font-bold text-cyan-400 mb-4 relative z-10">GNN VIEW: CONNECTED NETWORK
+                            </h4>
+                            <p class="text-gray-300 mb-6 relative z-10">
+                                GNNs are built to understand relationships, modeling the entire network to see how
+                                issues propagate
+                                and interact.
+                            </p>
+                            <div
+                                class="relative flex justify-around items-center h-32 p-4 bg-black/40 rounded-xl border border-cyan-500/30 z-10">
+                                <div
+                                    class="absolute top-1/2 left-8 right-8 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full shadow-lg shadow-cyan-500/50">
+                                </div>
+                                <div
+                                    class="relative w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-cyan-500/50 z-10">
+                                    A</div>
+                                <div
+                                    class="relative w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-cyan-500/50 z-10">
+                                    B</div>
+                                <div
+                                    class="relative w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-cyan-500/50 z-10">
+                                    C</div>
+                            </div>
+                            <p class="mt-4 text-sm text-cyan-400 font-semibold relative z-10">
+                                RESULT: Holistic understanding & accurate predictions
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="solution" class="py-16 md:py-24 bg-slate-100">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Solution Section -->
+        <section id="gnn-solution" class="py-16 md:py-24 relative">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-blue-900/10 to-transparent"></div>
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold tracking-tight text-slate-900">The GNN Solution: Seeing the Whole
-                        Picture</h2>
-                    <p class="mt-3 max-w-3xl mx-auto text-lg text-slate-600">GNNs are a paradigm shift in AI. Instead of
-                        static data points, they learn from the rich context of network relationships through a process
-                        called "message passing."</p>
+                    <h2
+                        class="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-4">
+                        THE GNN SOLUTION: SEEING THE WHOLE PICTURE
+                    </h2>
+                    <p class="mt-3 max-w-3xl mx-auto text-lg text-gray-300">
+                        GNNs are a paradigm shift in AI. Instead of static data points, they learn from the rich context
+                        of
+                        network relationships through a process called "message passing."
+                    </p>
                 </div>
-                <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg">
-                    <h3 class="text-xl font-bold text-center mb-6">Interactive Demo: How GNNs Learn</h3>
-                    <p class="text-center text-slate-600 mb-8">Hover over a pipeline segment (node) to see how it shares
-                        information with its neighbors. This iterative process allows the GNN to build a deep,
-                        contextual understanding of the entire network's health.</p>
-                    <div id="gnn-demo" class="relative h-64 w-full">
-                        <!-- Nodes will be injected by JS -->
+
+                <div class="max-w-4xl mx-auto bg-black/60 backdrop-blur-xl p-8 rounded-2xl border border-cyan-500/30">
+                    <h3 class="text-2xl font-bold text-center mb-6 text-cyan-400">INTERACTIVE DEMO: HOW GNNs LEARN</h3>
+                    <p class="text-center text-gray-300 mb-8">
+                        Hover over a pipeline segment (node) to see how it shares information with its neighbors. This
+                        iterative
+                        process allows the GNN to build a deep, contextual understanding of the entire network's health.
+                    </p>
+
+                    <div id="gnn-demo"
+                        class="relative h-64 w-full bg-black/40 rounded-xl border border-cyan-500/20 overflow-hidden">
+                        <!-- Nodes and edges will be dynamically created here -->
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="proof" class="py-16 md:py-24">
+        <!-- Proof Section -->
+        <section id="the-proof" class="py-16 md:py-24 relative">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold tracking-tight text-slate-900">Proven Performance & Tangible Impact
+                    <h2
+                        class="text-4xl font-bold bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent mb-4">
+                        PROVEN PERFORMANCE & TANGIBLE IMPACT
                     </h2>
-                    <p class="mt-3 max-w-2xl mx-auto text-lg text-slate-600">In analogous critical infrastructure, GNNs
-                        consistently outperform traditional models, leading to significant operational and financial
-                        benefits.</p>
+                    <p class="mt-3 max-w-2xl mx-auto text-lg text-gray-300">
+                        In analogous critical infrastructure, GNNs consistently outperform traditional models, leading
+                        to
+                        significant operational and financial benefits.
+                    </p>
                 </div>
+
                 <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
-                    <div class="lg:col-span-3 bg-white p-8 rounded-xl shadow-lg">
-                        <h3 class="text-xl font-bold text-center mb-2">Superior Predictive Accuracy</h3>
-                        <p class="text-center text-slate-600 mb-6">GNNs show a clear performance lift over established
-                            machine learning benchmarks in real-world tests on power grids.</p>
-                        <div class="chart-container">
+                    <div class="lg:col-span-3 bg-black/60 backdrop-blur-xl p-8 rounded-2xl border border-cyan-500/30">
+                        <h3 class="text-2xl font-bold text-center mb-2 text-cyan-400">SUPERIOR PREDICTIVE ACCURACY</h3>
+                        <p class="text-center text-gray-300 mb-6">
+                            GNNs show a clear performance lift over established machine learning benchmarks in
+                            real-world tests on
+                            power grids.
+                        </p>
+                        <div class="h-80">
                             <canvas id="performanceChart"></canvas>
                         </div>
                     </div>
-                    <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-lg flex flex-col justify-center">
-                        <h3 class="text-xl font-bold text-center mb-6">Projected Business Outcomes</h3>
-                        <div class="space-y-6">
-                            <div>
-                                <p class="text-center text-5xl font-black text-blue-600">50%</p>
-                                <p class="mt-1 text-center text-lg font-semibold text-slate-800">Reduction in Unplanned
-                                    Downtime</p>
+
+                    <div
+                        class="lg:col-span-2 bg-black/60 backdrop-blur-xl p-8 rounded-2xl border border-cyan-500/30 flex flex-col justify-center">
+                        <h3 class="text-2xl font-bold text-center mb-6 text-cyan-400">PROJECTED BUSINESS OUTCOMES</h3>
+                        <div class="space-y-8">
+                            <div class="text-center">
+                                <p
+                                    class="text-6xl font-black bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
+                                    50%</p>
+                                <p class="mt-1 text-lg font-semibold text-gray-300">Reduction in Unplanned Downtime</p>
                             </div>
-                            <div>
-                                <p class="text-center text-5xl font-black text-blue-600">40%</p>
-                                <p class="mt-1 text-center text-lg font-semibold text-slate-800">Lower Maintenance Costs
-                                </p>
+                            <div class="text-center">
+                                <p
+                                    class="text-6xl font-black bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
+                                    40%</p>
+                                <p class="mt-1 text-lg font-semibold text-gray-300">Lower Maintenance Costs</p>
                             </div>
                         </div>
                     </div>
@@ -225,349 +341,359 @@
             </div>
         </section>
 
-        <section id="framework" class="py-16 md:py-24 bg-slate-100">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Framework Section -->
+        <section id="framework" class="py-16 md:py-24 relative">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/10 to-transparent"></div>
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold tracking-tight text-slate-900">Our GNN Implementation Framework</h2>
-                    <p class="mt-3 max-w-2xl mx-auto text-lg text-slate-600">We follow a structured, four-step
-                        methodology to transform your raw data into an actionable predictive maintenance engine. Click
-                        each step to learn more.</p>
+                    <h2
+                        class="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+                        OUR GNN IMPLEMENTATION FRAMEWORK
+                    </h2>
+                    <p class="mt-3 max-w-2xl mx-auto text-lg text-gray-300">
+                        We follow a structured, four-step methodology to transform your raw data into an actionable
+                        predictive
+                        maintenance engine. Click each step to learn more.
+                    </p>
                 </div>
-                <div id="framework-steps" class="space-y-4">
-                    <!-- Step 1 -->
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <button data-step="1"
-                            class="w-full text-left p-6 flex justify-between items-center focus:outline-none">
-                            <div class="flex items-center">
-                                <div
-                                    class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold">
-                                    1</div>
-                                <h3 class="ml-4 text-xl font-bold text-slate-900">Data Ingestion & Preprocessing</h3>
-                            </div>
-                            <div class="arrow w-6 h-6 text-slate-500 transform transition-transform">▼</div>
-                        </button>
-                        <div id="step-content-1" class="step-content px-6 pb-6">
-                            <p class="text-slate-600">This foundational step involves gathering and unifying diverse
-                                datasets. We integrate GIS data (length, material, age), road network data, historical
-                                failure records, environmental conditions, and real-time sensor data (pressure, flow,
-                                vibration) to create a comprehensive data foundation.</p>
-                        </div>
-                    </div>
-                    <!-- Step 2 -->
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <button data-step="2"
-                            class="w-full text-left p-6 flex justify-between items-center focus:outline-none">
-                            <div class="flex items-center">
-                                <div
-                                    class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold">
-                                    2</div>
-                                <h3 class="ml-4 text-xl font-bold text-slate-900">Graph Construction</h3>
-                            </div>
-                            <div class="arrow w-6 h-6 text-slate-500 transform transition-transform">▼</div>
-                        </button>
-                        <div id="step-content-2" class="step-content px-6 pb-6">
-                            <p class="text-slate-600">Here, we translate your tabular data into a rich, interconnected
-                                graph. Each pipeline segment, sensor, and junction becomes a 'node'. 'Edges' are created
-                                to represent physical connections, proximity to external factors like roads, and other
-                                functional relationships. This structure is what allows the GNN to see the complete
-                                network context.</p>
-                        </div>
-                    </div>
-                    <!-- Step 3 -->
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <button data-step="3"
-                            class="w-full text-left p-6 flex justify-between items-center focus:outline-none">
-                            <div class="flex items-center">
-                                <div
-                                    class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold">
-                                    3</div>
-                                <h3 class="ml-4 text-xl font-bold text-slate-900">GNN Model Training</h3>
-                            </div>
-                            <div class="arrow w-6 h-6 text-slate-500 transform transition-transform">▼</div>
-                        </button>
-                        <div id="step-content-3" class="step-content px-6 pb-6">
-                            <p class="text-slate-600">Using advanced frameworks like PyTorch Geometric, we train a GNN
-                                model (such as GCN, GAT, or GraphSAGE) on the constructed graph. The model learns
-                                complex patterns and dependencies from your historical data, using techniques like
-                                'message passing' to understand how different factors collectively contribute to failure
-                                risk.</p>
-                        </div>
-                    </div>
-                    <!-- Step 4 -->
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <button data-step="4"
-                            class="w-full text-left p-6 flex justify-between items-center focus:outline-none">
-                            <div class="flex items-center">
-                                <div
-                                    class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold">
-                                    4</div>
-                                <h3 class="ml-4 text-xl font-bold text-slate-900">Deployment & Actionable Insights</h3>
-                            </div>
-                            <div class="arrow w-6 h-6 text-slate-500 transform transition-transform">▼</div>
-                        </button>
-                        <div id="step-content-4" class="step-content px-6 pb-6">
-                            <p class="text-slate-600">The trained model is deployed and integrated into your operational
-                                workflows. It provides a ranked list of at-risk pipeline segments, enabling your team to
-                                move from a reactive or scheduled maintenance plan to a highly efficient, proactive, and
-                                data-driven strategy. This prioritizes resources where they are needed most, preventing
-                                failures before they happen.</p>
-                        </div>
-                    </div>
+
+                <div class="space-y-4" id="accordion-container">
+                    <!-- Accordion items will be dynamically created here -->
                 </div>
             </div>
         </section>
 
-        <section id="next-steps" class="py-16 md:py-24">
+        <!-- Next Steps Section -->
+        <section id="next-steps" class="py-16 md:py-24 relative">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold tracking-tight text-slate-900">The Path Forward</h2>
-                    <p class="mt-3 max-w-2xl mx-auto text-lg text-slate-600">We recommend a strategic, phased approach
-                        to ensure success and maximize return on investment.</p>
+                    <h2
+                        class="text-4xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent mb-4">
+                        THE PATH FORWARD
+                    </h2>
+                    <p class="mt-3 max-w-2xl mx-auto text-lg text-gray-300">
+                        We recommend a strategic, phased approach to ensure success and maximize return on investment.
+                    </p>
                 </div>
+
                 <div class="max-w-4xl mx-auto">
-                    <ol class="space-y-6">
-                        <li class="flex">
+                    <div class="space-y-8">
+                        <div class="flex items-start group">
                             <div
-                                class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+                                class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-yellow-500 to-orange-500 text-black flex items-center justify-center font-bold text-lg shadow-lg shadow-yellow-500/50 group-hover:scale-110 transition-transform duration-300">
                                 1</div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-bold">Feasibility Study & Data Audit</h4>
-                                <p class="mt-1 text-slate-600">Assess current data landscape (GIS, historical records,
+                            <div
+                                class="ml-6 bg-black/40 backdrop-blur-xl p-6 rounded-xl border border-yellow-500/30 flex-1 group-hover:border-yellow-400/60 transition-all duration-300">
+                                <h4 class="text-xl font-bold text-yellow-400 mb-2">Feasibility Study & Data Audit</h4>
+                                <p class="text-gray-300">Assess current data landscape (GIS, historical records,
                                     sensors) to identify gaps and confirm suitability for graph construction.</p>
                             </div>
-                        </li>
-                        <li class="flex">
+                        </div>
+                        <div class="flex items-start group">
                             <div
-                                class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+                                class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-yellow-500 to-orange-500 text-black flex items-center justify-center font-bold text-lg shadow-lg shadow-yellow-500/50 group-hover:scale-110 transition-transform duration-300">
                                 2</div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-bold">Targeted Pilot Project</h4>
-                                <p class="mt-1 text-slate-600">Select a critical network segment for a proof-of-concept
-                                    to demonstrate value and refine the model in a controlled environment.</p>
-                            </div>
-                        </li>
-                        <li class="flex">
                             <div
-                                class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
-                                3</div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-bold">Phased Rollout & Integration</h4>
-                                <p class="mt-1 text-slate-600">Gradually expand the solution across the network,
-                                    integrating with existing SCADA and maintenance systems for seamless operational
-                                    use.</p>
+                                class="ml-6 bg-black/40 backdrop-blur-xl p-6 rounded-xl border border-yellow-500/30 flex-1 group-hover:border-yellow-400/60 transition-all duration-300">
+                                <h4 class="text-xl font-bold text-yellow-400 mb-2">Targeted Pilot Project</h4>
+                                <p class="text-gray-300">Select a critical network segment for a proof-of-concept to
+                                    demonstrate value and refine the model in a controlled environment.</p>
                             </div>
-                        </li>
-                    </ol>
+                        </div>
+                        <div class="flex items-start group">
+                            <div
+                                class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-yellow-500 to-orange-500 text-black flex items-center justify-center font-bold text-lg shadow-lg shadow-yellow-500/50 group-hover:scale-110 transition-transform duration-300">
+                                3</div>
+                            <div
+                                class="ml-6 bg-black/40 backdrop-blur-xl p-6 rounded-xl border border-yellow-500/30 flex-1 group-hover:border-yellow-400/60 transition-all duration-300">
+                                <h4 class="text-xl font-bold text-yellow-400 mb-2">Phased Rollout & Integration</h4>
+                                <p class="text-gray-300">Gradually expand the solution across the network, integrating
+                                    with existing SCADA and maintenance systems for seamless operational use.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
-
     </main>
 
-    <footer class="bg-slate-800 text-slate-400">
+    <!-- Footer -->
+    <footer class="bg-black/80 backdrop-blur-xl border-t border-cyan-500/30 relative">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-            <p>&copy; 2025 GNN Predictive Analytics Initiative. All rights reserved.</p>
-            <p class="text-sm mt-2">This interactive application summarizes the key findings of the strategic proposal
-                on leveraging Graph Neural Networks for pipeline failure prediction.</p>
+            <p class="text-gray-400">&copy; 2025 GNN PREDICTIVE ANALYTICS INITIATIVE. ALL RIGHTS RESERVED.</p>
+            <p class="text-sm mt-2 text-gray-500">
+                This interactive application summarizes the key findings of the strategic proposal on leveraging Graph
+                Neural Networks for pipeline failure prediction.
+            </p>
         </div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        // Global variables
+        let activeAccordion = null;
+        let hoveredNode = null;
 
-            const tooltipTitleCallback = (tooltipItems) => {
-                const item = tooltipItems[0];
-                let label = item.chart.data.labels[item.dataIndex];
-                if (Array.isArray(label)) {
-                    return label.join(' ');
+        // Node and edge data for GNN demo
+        const nodes = [
+            { id: 1, x: 20, y: 50 },
+            { id: 2, x: 40, y: 25 },
+            { id: 3, x: 40, y: 75 },
+            { id: 4, x: 60, y: 50 },
+            { id: 5, x: 80, y: 50 }
+        ];
+
+        const edges = [
+            { from: 1, to: 2 },
+            { from: 1, to: 3 },
+            { from: 2, to: 4 },
+            { from: 3, to: 4 },
+            { from: 4, to: 5 }
+        ];
+
+        // Accordion data
+        const accordionSteps = [
+            {
+                title: "Data Ingestion & Preprocessing",
+                content: "This foundational step involves gathering and unifying diverse datasets. We integrate GIS data (length, material, age), road network data, historical failure records, environmental conditions, and real-time sensor data (pressure, flow, vibration) to create a comprehensive data foundation."
+            },
+            {
+                title: "Graph Construction",
+                content: "Here, we translate your tabular data into a rich, interconnected graph. Each pipeline segment, sensor, and junction becomes a 'node'. 'Edges' are created to represent physical connections, proximity to external factors like roads, and other functional relationships. This structure is what allows the GNN to see the complete network context."
+            },
+            {
+                title: "GNN Model Training",
+                content: "Using advanced frameworks like PyTorch Geometric, we train a GNN model (such as GCN, GAT, or GraphSAGE) on the constructed graph. The model learns complex patterns and dependencies from your historical data, using techniques like 'message passing' to understand how different factors collectively contribute to failure risk."
+            },
+            {
+                title: "Deployment & Actionable Insights",
+                content: "The trained model is deployed and integrated into your operational workflows. It provides a ranked list of at-risk pipeline segments, enabling your team to move from a reactive or scheduled maintenance plan to a highly efficient, proactive, and data-driven strategy. This prioritizes resources where they are needed most, preventing failures before they happen."
+            }
+        ];
+
+        // Helper functions
+        function getConnectedNodes(nodeId) {
+            return edges
+                .filter(edge => edge.from === nodeId || edge.to === nodeId)
+                .map(edge => edge.from === nodeId ? edge.to : edge.from);
+        }
+
+        function calculateDistance(node1, node2) {
+            return Math.sqrt(Math.pow(node2.x - node1.x, 2) + Math.pow(node2.y - node1.y, 2));
+        }
+
+        function calculateAngle(node1, node2) {
+            return Math.atan2(node2.y - node1.y, node2.x - node1.x) * 180 / Math.PI;
+        }
+
+        // Initialize GNN Demo
+        function initGNNDemo() {
+            const container = document.getElementById('gnn-demo');
+
+            // Create edges
+            edges.forEach((edge, index) => {
+                const fromNode = nodes.find(n => n.id === edge.from);
+                const toNode = nodes.find(n => n.id === edge.to);
+
+                if (fromNode && toNode) {
+                    const edgeElement = document.createElement('div');
+                    edgeElement.className = 'absolute h-0.5 bg-gray-600 edge transition-all duration-300';
+                    edgeElement.id = `edge-${index}`;
+
+                    const distance = calculateDistance(fromNode, toNode);
+                    const angle = calculateAngle(fromNode, toNode);
+
+                    edgeElement.style.left = `${fromNode.x}%`;
+                    edgeElement.style.top = `${fromNode.y}%`;
+                    edgeElement.style.width = `${distance}%`;
+                    edgeElement.style.transformOrigin = '0 0';
+                    edgeElement.style.transform = `rotate(${angle}deg)`;
+
+                    container.appendChild(edgeElement);
                 }
-                return label;
-            };
+            });
 
-            const commonTooltipOptions = {
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            title: tooltipTitleCallback
-                        },
-                        backgroundColor: '#1e293b',
-                        titleFont: { weight: 'bold' },
-                        bodyFont: { size: 14 },
-                        padding: 12,
-                        cornerRadius: 6
-                    }
+            // Create nodes
+            nodes.forEach(node => {
+                const nodeElement = document.createElement('div');
+                nodeElement.className = 'absolute w-12 h-12 rounded-full flex items-center justify-center text-white font-bold cursor-pointer node bg-gradient-to-br from-gray-600 to-gray-800';
+                nodeElement.id = `node-${node.id}`;
+                nodeElement.textContent = node.id;
+
+                nodeElement.style.left = `${node.x}%`;
+                nodeElement.style.top = `${node.y}%`;
+                nodeElement.style.transform = 'translate(-50%, -50%)';
+
+                // Add hover events
+                nodeElement.addEventListener('mouseenter', () => {
+                    hoveredNode = node.id;
+                    updateNodeStates();
+                });
+
+                nodeElement.addEventListener('mouseleave', () => {
+                    hoveredNode = null;
+                    updateNodeStates();
+                });
+
+                container.appendChild(nodeElement);
+            });
+        }
+
+        // Update node and edge states based on hover
+        function updateNodeStates() {
+            nodes.forEach(node => {
+                const nodeElement = document.getElementById(`node-${node.id}`);
+                const isHovered = hoveredNode === node.id;
+                const isConnected = hoveredNode && getConnectedNodes(hoveredNode).includes(node.id);
+                const isActive = isHovered || isConnected;
+
+                if (isActive) {
+                    nodeElement.className = 'absolute w-12 h-12 rounded-full flex items-center justify-center text-white font-bold cursor-pointer node bg-gradient-to-br from-cyan-400 to-blue-500 shadow-lg shadow-cyan-400/50 scale-110';
+                } else {
+                    nodeElement.className = 'absolute w-12 h-12 rounded-full flex items-center justify-center text-white font-bold cursor-pointer node bg-gradient-to-br from-gray-600 to-gray-800';
                 }
-            };
+            });
 
-            const performanceData = {
-                labels: ['vs. XGBoost', 'vs. Random Forest', 'vs. Simpler GNNs'],
-                datasets: [{
-                    label: 'F1-Score Improvement',
-                    data: [3.2, 2.7, 12.5],
-                    backgroundColor: ['#2563eb', '#60a5fa', '#93c5fd'],
-                    borderColor: '#ffffff',
-                    borderWidth: 2,
-                    borderRadius: 4,
-                }]
-            };
+            edges.forEach((edge, index) => {
+                const edgeElement = document.getElementById(`edge-${index}`);
+                const isActive = hoveredNode === edge.from || hoveredNode === edge.to;
 
-            const performanceCtx = document.getElementById('performanceChart')?.getContext('2d');
-            if (performanceCtx) {
-                new Chart(performanceCtx, {
-                    type: 'bar',
-                    data: performanceData,
-                    options: {
-                        ...commonTooltipOptions,
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            ...commonTooltipOptions.plugins,
-                            legend: { display: false },
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Performance Improvement (%)',
-                                    font: { size: 14 }
-                                },
-                                grid: { color: '#e2e8f0' }
+                if (isActive) {
+                    edgeElement.className = 'absolute h-0.5 edge transition-all duration-300 active';
+                } else {
+                    edgeElement.className = 'absolute h-0.5 bg-gray-600 edge transition-all duration-300';
+                }
+            });
+        }
+
+        // Initialize Accordion
+        function initAccordion() {
+            const container = document.getElementById('accordion-container');
+
+            accordionSteps.forEach((step, index) => {
+                const accordionItem = document.createElement('div');
+                accordionItem.className = 'bg-black/60 backdrop-blur-xl rounded-2xl border border-cyan-500/30 overflow-hidden';
+
+                accordionItem.innerHTML = `
+                    <button class="accordion-button w-full text-left p-6 flex justify-between items-center focus:outline-none hover:bg-cyan-500/10 transition-all duration-300" data-step="${index + 1}">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500 to-purple-500 text-white flex items-center justify-center text-xl font-bold shadow-lg shadow-cyan-500/50">
+                                ${index + 1}
+                            </div>
+                            <h3 class="ml-4 text-xl font-bold text-cyan-400">${step.title}</h3>
+                        </div>
+                        <div class="accordion-arrow w-6 h-6 text-cyan-400 transform transition-transform duration-300">
+                            ▼
+                        </div>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="px-6 pb-6">
+                            <div class="w-full h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent mb-4"></div>
+                            <p class="text-gray-300 leading-relaxed">${step.content}</p>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(accordionItem);
+            });
+
+            // Add click events to accordion buttons
+            document.querySelectorAll('.accordion-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const step = parseInt(button.dataset.step);
+                    toggleAccordion(step);
+                });
+            });
+        }
+
+        // Toggle accordion
+        function toggleAccordion(step) {
+            const newActiveAccordion = activeAccordion === step ? null : step;
+
+            // Close all accordions
+            document.querySelectorAll('.accordion-content').forEach((content, index) => {
+                const arrow = content.parentElement.querySelector('.accordion-arrow');
+                if (index + 1 === newActiveAccordion) {
+                    content.classList.add('active');
+                    arrow.style.transform = 'rotate(180deg)';
+                } else {
+                    content.classList.remove('active');
+                    arrow.style.transform = 'rotate(0deg)';
+                }
+            });
+
+            activeAccordion = newActiveAccordion;
+        }
+
+        // Initialize Chart
+        function initChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['vs. XGBoost', 'vs. Random Forest', 'vs. Simpler GNNs'],
+                    datasets: [{
+                        label: 'F1-Score Improvement',
+                        data: [3.2, 2.7, 12.5],
+                        backgroundColor: ['#00f5ff', '#0099ff', '#6600ff'],
+                        borderColor: '#00ffff',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#0a0a0a',
+                            titleColor: '#00ffff',
+                            bodyColor: '#ffffff',
+                            borderColor: '#00ffff',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Performance Improvement (%)',
+                                color: '#00ffff',
+                                font: { size: 14 }
                             },
-                            x: {
-                                grid: { display: false }
-                            }
+                            grid: { color: '#333333' },
+                            ticks: { color: '#00ffff' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#00ffff' }
                         }
                     }
-                });
-            }
+                }
+            });
+        }
 
-            const frameworkSteps = document.getElementById('framework-steps');
-            if (frameworkSteps) {
-                frameworkSteps.addEventListener('click', function (e) {
-                    const button = e.target.closest('button');
-                    if (!button) return;
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initGNNDemo();
+            initAccordion();
+            initChart();
+        });
 
-                    const step = button.dataset.step;
-                    const content = document.getElementById(`step-content-${step}`);
-                    const arrow = button.querySelector('.arrow');
-
-                    if (content.style.maxHeight && content.style.maxHeight !== '0px') {
-                        content.style.maxHeight = '0px';
-                        content.style.paddingTop = '0';
-                        content.style.paddingBottom = '0';
-                        arrow.style.transform = 'rotate(0deg)';
-                    } else {
-                        // Close all other steps first
-                        document.querySelectorAll('.step-content').forEach(el => {
-                            el.style.maxHeight = '0px';
-                            el.style.paddingTop = '0';
-                            el.style.paddingBottom = '0';
-                        });
-                        document.querySelectorAll('.arrow').forEach(el => el.style.transform = 'rotate(0deg)');
-
-                        content.style.paddingTop = '1.5rem';
-                        content.style.paddingBottom = '1.5rem';
-                        content.style.maxHeight = content.scrollHeight + 'px';
-                        arrow.style.transform = 'rotate(180deg)';
-                    }
-                });
-            }
-
-            const gnnDemo = document.getElementById('gnn-demo');
-            if (gnnDemo) {
-                const nodes = [
-                    { id: 1, x: '20%', y: '50%' },
-                    { id: 2, x: '40%', y: '25%' },
-                    { id: 3, x: '40%', y: '75%' },
-                    { id: 4, x: '60%', y: '50%' },
-                    { id: 5, x: '80%', y: '50%' }
-                ];
-                const edges = [
-                    { from: 1, to: 2 }, { from: 1, to: 3 },
-                    { from: 2, to: 4 }, { from: 3, to: 4 },
-                    { from: 4, to: 5 }
-                ];
-
-                edges.forEach(edge => {
-                    const line = document.createElement('div');
-                    line.classList.add('absolute', 'bg-slate-300', 'transition-all', 'duration-300');
-                    line.dataset.from = edge.from;
-                    line.dataset.to = edge.to;
-                    gnnDemo.appendChild(line);
-                });
-
-                nodes.forEach(node => {
-                    const div = document.createElement('div');
-                    div.classList.add('absolute', 'w-12', 'h-12', 'bg-blue-600', 'rounded-full', 'flex', 'items-center', 'justify-center', 'text-white', 'font-bold', 'cursor-pointer', 'shadow-lg', 'transition-all', 'duration-300');
-                    div.style.left = `calc(${node.x} - 24px)`;
-                    div.style.top = `calc(${node.y} - 24px)`;
-                    div.textContent = node.id;
-                    div.dataset.id = node.id;
-                    gnnDemo.appendChild(div);
-                });
-
-                function drawLines() {
-                    const nodeElements = Array.from(gnnDemo.querySelectorAll('div[data-id]')).reduce((acc, el) => {
-                        acc[el.dataset.id] = el;
-                        return acc;
-                    }, {});
-
-                    gnnDemo.querySelectorAll('div[data-from]').forEach(line => {
-                        const fromNode = nodeElements[line.dataset.from];
-                        const toNode = nodeElements[line.dataset.to];
-                        if (!fromNode || !toNode) return;
-
-                        const x1 = fromNode.offsetLeft + fromNode.offsetWidth / 2;
-                        const y1 = fromNode.offsetTop + fromNode.offsetHeight / 2;
-                        const x2 = toNode.offsetLeft + toNode.offsetWidth / 2;
-                        const y2 = toNode.offsetTop + toNode.offsetHeight / 2;
-
-                        const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-                        const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-
-                        line.style.width = `${length}px`;
-                        line.style.height = '2px';
-                        line.style.left = `${x1}px`;
-                        line.style.top = `${y1}px`;
-                        line.style.transformOrigin = '0 0';
-                        line.style.transform = `rotate(${angle}deg)`;
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
                     });
                 }
-
-                drawLines();
-                window.addEventListener('resize', drawLines);
-
-                gnnDemo.addEventListener('mouseover', e => {
-                    if (e.target.dataset.id) {
-                        const nodeId = e.target.dataset.id;
-                        gnnDemo.querySelectorAll('div[data-id]').forEach(n => n.classList.add('opacity-30', 'bg-slate-500'));
-                        e.target.classList.remove('opacity-30', 'bg-slate-500');
-                        e.target.classList.add('bg-blue-600');
-
-                        gnnDemo.querySelectorAll('div[data-from]').forEach(l => l.classList.add('bg-slate-200'));
-
-                        const connectedEdges = edges.filter(edge => edge.from == nodeId || edge.to == nodeId);
-                        connectedEdges.forEach(edge => {
-                            const line = gnnDemo.querySelector(`div[data-from='${edge.from}'][data-to='${edge.to}']`);
-                            if (line) line.classList.replace('bg-slate-200', 'bg-blue-500');
-
-                            const neighborId = edge.from == nodeId ? edge.to : edge.from;
-                            const neighborNode = gnnDemo.querySelector(`div[data-id='${neighborId}']`);
-                            if (neighborNode) {
-                                neighborNode.classList.remove('opacity-30', 'bg-slate-500');
-                                neighborNode.classList.add('bg-blue-600');
-                            }
-                        });
-                    }
-                });
-
-                gnnDemo.addEventListener('mouseout', e => {
-                    gnnDemo.querySelectorAll('div[data-id]').forEach(n => n.classList.remove('opacity-30', 'bg-slate-500'));
-                    gnnDemo.querySelectorAll('div[data-from]').forEach(l => l.classList.replace('bg-blue-500', 'bg-slate-300'));
-                    gnnDemo.querySelectorAll('div[data-from].bg-slate-200').forEach(l => l.classList.replace('bg-slate-200', 'bg-slate-300'));
-                });
-            }
+            });
         });
     </script>
 </body>
